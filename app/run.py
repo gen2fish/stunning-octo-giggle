@@ -7,7 +7,7 @@ def create_app(config_filename):
     from app import api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 
-    from Model import db
+    from model import db
     db.init_app(app)
 
     return app
@@ -15,4 +15,4 @@ def create_app(config_filename):
 
 if __name__ == "__main__":
     app = create_app("config")
-    app.run(debug=True)
+    app.run(debug=True,host="0.0.0.0")
