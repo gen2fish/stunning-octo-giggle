@@ -7,8 +7,8 @@ movie_schema = MovieSchema()
 class movieResource(Resource):
   def get(self):
     movies = Movie.query.all()
-    movies = movie_schema.dump(movies)
-    return {'status': 'sucess', 'data': movies}, 200
+    movies_json = movie_schema.dump(movies)
+    return {'status': 'sucess', 'data': movies_json}, 200
 
   def post(self):
     json_data = request.get_json(force=True)
@@ -32,5 +32,5 @@ class movieResource(Resource):
     db.session.add(movie)
     db.session.commit()
 
-    result = movie_schema.dump(movie).data
+    result = movie_schema.dump(movie)
     return { 'status': 'successful', 'data': result }, 201

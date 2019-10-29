@@ -16,10 +16,12 @@ class Movie(db.Model):
     format = db.Column(db.String(250), nullable=False)
     releaseYear = db.Column(db.Integer, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
-    creationDate = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
 
-    def __init__(self, movie):
-        self.movie = movie
+    def __init__(self, title, format, releaseYear, rating):
+        self.title = title
+        self.format = format
+        self.rating = rating
+        self.releaseYear = releaseYear
 
 class MovieSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
@@ -27,4 +29,3 @@ class MovieSchema(ma.Schema):
     format = fields.String()
     releaseYear = fields.Integer()
     rating = fields.Integer()
-    creation_date = fields.DateTime()
