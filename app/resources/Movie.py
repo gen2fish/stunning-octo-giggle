@@ -1,13 +1,18 @@
 from flask import request
 from flask_restful import Resource
 from model import db, Movie, MovieSchema
+import logging
 
 movie_schema = MovieSchema()
 
 class movieResource(Resource):
   def get(self):
     movies = Movie.query.all()
-    movies_json = movie_schema.dump(movies)
+    logging.basicConfig(level=logging.DEBUG)
+    movies_json = []
+    for mov in movies:
+      movies_json.append(movie_schema.dump(mov))
+
     return {'status': 'sucess', 'data': movies_json}, 200
 
   def post(self):
