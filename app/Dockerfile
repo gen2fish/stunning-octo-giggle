@@ -5,6 +5,6 @@ WORKDIR /app
 RUN ls -lart
 
 RUN pip install -r requirements.txt
-RUN python --version
+RUN chmod +x docker-entry.sh
 EXPOSE 5000
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "run"]
+CMD ["/bin/bash", "docker-entry.sh"]

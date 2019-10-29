@@ -10,15 +10,14 @@ class movieAllResource(Resource):
   def get(self):
     # Query DB
     movies = Movie.query.all()
+    movies_json = []
 
     # Format and Return
     if movies:
-      movies_json = []
       for movie in movies:
         movies_json.append(movie_schema.dump(movie))
-      return {'status': 'sucess', 'data': movies_json}, 200
-    else:
-      return {'message': 'error', 'data': 'No movies found'}, 404
+    return {'status': 'success', 'data': movies_json}, 200
+
 
   def post(self):
     # JSON-ify
