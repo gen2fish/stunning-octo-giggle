@@ -1,12 +1,15 @@
 from flask import request
 from flask_restful import Resource
 from model import db, Movie, MovieSchema
+from flask_httpauth import HTTPBasicAuth
 import logging
 
 movie_schema = MovieSchema()
 logging.basicConfig(level=logging.DEBUG)
+auth = HTTPBasicAuth()
 
 class movieAllResource(Resource):
+  @auth.login_required
   def get(self):
     # Query DB
     movies = Movie.query.all()
@@ -18,7 +21,7 @@ class movieAllResource(Resource):
         movies_json.append(movie_schema.dump(movie))
     return {'status': 'success', 'data': movies_json}, 200
 
-
+  @auth.login_required
   def post(self):
     # JSON-ify
     json_data = request.get_json(force=True)
@@ -46,6 +49,7 @@ class movieAllResource(Resource):
     return { 'status': 'successful', 'data': result }, 201
 
 class movieResource(Resource):
+  @auth.login_required
   def get(self, mid):
     # Get the record and parse
     movies = Movie.query.filter_by(id=mid).first()
@@ -55,6 +59,7 @@ class movieResource(Resource):
     else:
       return {'message': 'error', 'data': 'Movie not found'}, 404
 
+  @auth.login_required
   def put(self, mid):
     # Get JSON and see if Record can be found
     json_data = request.get_json(force=True)
@@ -81,6 +86,7 @@ class movieResource(Resource):
     else:
       return { 'status': 'error', 'data': 'Movie not found'}, 404
 
+  @auth.login_required
   def delete(self, mid):
     # Find the thing
     movies = Movie.query.filter_by(id=mid).first()
