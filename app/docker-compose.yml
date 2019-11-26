@@ -21,6 +21,6 @@ services:
         aliases:
           - movie-app
     volumes:
-      - ./:/app/
+      - ./db:/app/db
 networks:
   movie-network:
