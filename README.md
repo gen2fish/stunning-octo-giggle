@@ -2,6 +2,10 @@
 
 Movie Database and API Exersice
 
+## Authentication
+
+- HTTP Basic Authentication
+
 ## Endpoints
 
 ### /movie
