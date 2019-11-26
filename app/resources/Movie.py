@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-from model import db, Movie, MovieSchema
+from model import db, Movie, MovieSchema, User
 from flask_httpauth import HTTPBasicAuth
 import logging
 
@@ -12,13 +12,15 @@ class movieAllResource(Resource):
   @auth.login_required
   def get(self):
     # Query DB
-    movies = Movie.query.all()
+    sortFilter = request.args.get('sort')
+    movies = Movie.query.order_by(sortFilter)
     movies_json = []
 
     # Format and Return
     if movies:
       for movie in movies:
         movies_json.append(movie_schema.dump(movie))
+    logging.debug(movies_json)
     return {'status': 'success', 'data': movies_json}, 200
 
   @auth.login_required
@@ -99,3 +101,11 @@ class movieResource(Resource):
       return {'status': 'success'}, 204
     else:
       return {'message': 'error', 'data': 'Movie not found'}, 404
+
+  @auth.verify_password
+  def verify_password(username, password):
+    user = User.query.filter_by(username = username).first()
+    if not user or not user.verify_password(password):
+      return False
+    # g.user = user
+    return True
