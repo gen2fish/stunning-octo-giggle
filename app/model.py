@@ -4,11 +4,8 @@ from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from passlib.apps import custom_app_context as pwd_context
 
-
-
 ma = Marshmallow()
 db = SQLAlchemy()
-
 
 class Movie(db.Model):
     __tablename__ = 'movie'
@@ -32,17 +29,18 @@ class MovieSchema(ma.Schema):
     rating = fields.Integer()
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
-    password = db.Column(db.String(100))
-    name = db.Column(db.String(1000))
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(32), index = True)
+    password_hash = db.Column(db.String(128))
 
     def hash_password(self, password):
-        self.password = pwd_context.encrypt(password)
+        self.password_hash = pwd_context.encrypt(password)
 
     def verify_password(self, password):
         return pwd_context.verify(password, self.password_hash)
 
 class UserSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
-    password = fields.String()
+    password_hash = fields.String()
     name = fields.String()
